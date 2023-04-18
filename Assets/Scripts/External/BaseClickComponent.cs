@@ -100,13 +100,7 @@ namespace Diwide.Checkers
             _meshMaterials[0] = _mesh.material;
         }
 	}
-
-    public enum ColorType
-    {
-        White,
-        Black
-    }
-
+    
     public delegate void ClickEventHandler(BaseClickComponent component);
     public delegate void FocusEventHandler(CellComponent component, bool isSelect);
 }
