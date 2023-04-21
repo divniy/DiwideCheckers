@@ -9,8 +9,8 @@ namespace Diwide.Checkers
         [SerializeField] private Renderer _renderer;
         [Inject] private GameInstaller.Settings _settings;
         [Inject] private TilesRegistry _registry;
-        
-        public PawnFacade PawnFacade { get; set; }
+
+        public PawnFacade PawnFacade { get; set; } = null;
         // private PawnFacade.Factory _pawnFactory;
 
         // [Inject]

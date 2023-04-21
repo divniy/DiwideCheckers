@@ -12,6 +12,7 @@ namespace Diwide.Checkers
         public override void InstallBindings()
         {
             Container.Bind<TilesRegistry>().AsSingle().NonLazy();
+            Container.Bind<MoveValidator>().AsSingle().NonLazy();
             
             Container.BindFactory<TileIndex, TileFacade, TileFacade.Factory>()
                 .FromMonoPoolableMemoryPool(x => x
@@ -48,18 +49,9 @@ namespace Diwide.Checkers
             subcontainer.Bind<ColorType>().FromInstance(color);
             subcontainer.BindInterfacesAndSelfTo<PawnFacade>()
                 .FromComponentOnRoot().AsSingle().NonLazy();
+            subcontainer.BindInterfacesAndSelfTo<PathFinder>().AsSingle().NonLazy();
         }
 
-        // Transform GetPawnParent(InjectContext context)
-        // {
-        //     if (context.ObjectInstance is Component)
-        //     {
-        //         return ((Component)context.ObjectInstance).transform;
-        //     }
-        //
-        //     return null;
-        // }
-        
         [Serializable]
         public class Settings
         {

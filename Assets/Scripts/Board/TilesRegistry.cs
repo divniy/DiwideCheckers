@@ -19,5 +19,20 @@ namespace Diwide.Checkers
         {
             _tileFacades.Add(tile);
         }
+
+        public TileFacade GetTileFacade(TileIndex index)
+        {
+            return _tileFacades.Find(_ => _.Index.Equals(index));
+        }
+
+        public PawnFacade GetPawnFacade(TileIndex index)
+        {
+            return GetTileFacade(index).PawnFacade;
+        }
+
+        public bool IsTileExists(TileIndex index)
+        {
+            return _tileFacades.Exists(_ => _.Index == index);
+        }
     }
 }

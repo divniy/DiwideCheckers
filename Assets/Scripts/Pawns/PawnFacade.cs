@@ -11,8 +11,10 @@ namespace Diwide.Checkers
         [Inject] private GameInstaller.Settings _settings;
         [Inject] private TileFacade _tileFacade;
         [Inject] private ColorType _color;
+        [Inject] private TilesRegistry _registry;
 
         public TileIndex Index => _tileFacade.Index;
+        public ColorType Color => _color;
         
         // [Inject]
         // public void Construct(TileIndex index, ColorType color)
@@ -23,7 +25,7 @@ namespace Diwide.Checkers
 
         public void Initialize()
         {
-            _tileFacade.PawnFacade = this;
+            _registry.GetTileFacade(Index).PawnFacade = this;
             _renderer.material = _color == ColorType.Black 
                 ? _settings.BlackPawnMaterial 
                 : _settings.WhitePawnMaterial;
