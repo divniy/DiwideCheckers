@@ -7,7 +7,7 @@ namespace Diwide.Checkers
     {
         private List<TileFacade> _tileFacades = new();
 
-        public IEnumerable<TileFacade> Facades => _tileFacades;
+        public IEnumerable<TileFacade> TileFacades => _tileFacades;
 
         public IEnumerable<TileFacade> InitialBlackPawnTiles => _tileFacades
             .Where(_ => _.Index.Row <= 2).Where(_ => _.Tile.Color == ColorType.Black);

@@ -21,13 +21,20 @@ namespace Diwide.Checkers
                     .ByNewPrefabMethod(_settings.TilePrefab, InstallTile)
                     .UnderTransformGroup("Board"));
 
-            Container.BindInterfacesTo<BoardGenerator>().AsSingle();
+            Container.BindInterfacesTo<BoardGenerator>().AsSingle().NonLazy();
 
             Container.BindFactory<TileFacade, ColorType, PawnFacade, PawnFacade.Factory>()
                 .FromSubContainerResolve()
                 .ByNewPrefabMethod(_settings.PawnPrefab, InstallPawn);
 
-            Container.BindInterfacesTo<PawnsGenerator>().AsSingle();
+            Container.BindInterfacesTo<PawnsGenerator>().AsSingle().NonLazy();
+
+            Container.BindFactory<ColorType, Player, Player.Factory>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<PlayerManager>().AsSingle().NonLazy();
+            
+            Container.BindExecutionOrder<BoardGenerator>(-30);
+            Container.BindExecutionOrder<PawnsGenerator>(-20);
+            Container.BindExecutionOrder<PlayerManager>(-10);
         }
 
         private void InstallTile(DiContainer subcontainer)

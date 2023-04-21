@@ -24,7 +24,7 @@ namespace Diwide.Checkers
 
         private void CreatePawn(TileFacade tileFacade, ColorType color)
         {
-            Debug.LogFormat("Tile index {0}", tileFacade.Index);
+            // Debug.LogFormat("Tile index {0}", tileFacade.Index);
             PawnFacade pawnFacade = _pawnsFactory.Create(tileFacade, color);
             pawnFacade.transform.SetParent(tileFacade.transform, false);
             

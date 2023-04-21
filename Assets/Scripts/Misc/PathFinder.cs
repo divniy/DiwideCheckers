@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Diwide.Checkers
 {
-    public class PathFinder : IInitializable
+    public class PathFinder
     {
         public PawnFacade Pawn { get; }
         public List<PawnMove> ValidMoves = new();
@@ -19,9 +19,11 @@ namespace Diwide.Checkers
             Pawn = pawn;
         }
 
-        public void Initialize()
+        public void GenerateValidMoves()
         {
-            Debug.Log(GetRelativeTile(1, -1));
+            // Debug.Log(GetRelativeTile(1, -1));
+            ValidMoves = new();
+            AddMoveIfValid(1, -1);
             AddMoveIfValid(1, 1);
         }
 

@@ -12,17 +12,14 @@ namespace Diwide.Checkers
     [Serializable]
     public class PawnMove : IMovable
     {
+        public TileIndex From { get; }
+        public TileIndex To { get; }
+
         public PawnMove(TileIndex from, TileIndex to)
         {
-            _from = from;
-            _to = to;
+            From = from;
+            To = to;
         }
-
-        private TileIndex _from;
-        private TileIndex _to;
-
-        public TileIndex From => _from;
-        public TileIndex To => _to;
 
         public override string ToString()
         {
@@ -33,6 +30,7 @@ namespace Diwide.Checkers
     public class MoveValidator
     {
         [Inject] private TilesRegistry _registry;
+        [Inject] private PlayerManager _playerManager;
 
         public bool IsValid(PawnMove move)
         {
@@ -49,7 +47,7 @@ namespace Diwide.Checkers
         public bool AvailableToPlayer(IMovable move)
         {
             var pawn = _registry.GetPawnFacade(move.From);
-            return pawn != null && pawn.Color == ColorType.Black;
+            return pawn != null && pawn.Color == _playerManager.CurrentPlayer.PawnsColor;
         }
 
         public bool DestinationEmpty(IMovable move)

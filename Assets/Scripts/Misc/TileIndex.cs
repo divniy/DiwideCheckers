@@ -5,22 +5,22 @@ namespace Diwide.Checkers
         public int Row { get; }
         public int Col { get; }
 
-        public TileIndex(int col, int row)
+        public TileIndex(int row, int col)
         {
-            Col = col;
             Row = row;
+            Col = col;
         }
 
         public static TileIndex operator +(TileIndex firstTileIndex, TileIndex secondTileIndex)
         {
-            return new TileIndex(firstTileIndex.Col + secondTileIndex.Col,
-                firstTileIndex.Row + secondTileIndex.Row);
+            return new TileIndex(firstTileIndex.Row + secondTileIndex.Row,
+                firstTileIndex.Col + secondTileIndex.Col);
         }
 
         public static TileIndex operator -(TileIndex firstTileIndex, TileIndex secondTileIndex)
         {
-            return new TileIndex(firstTileIndex.Col - secondTileIndex.Col,
-                firstTileIndex.Row - secondTileIndex.Row);
+            return new TileIndex(firstTileIndex.Row - secondTileIndex.Row,
+                firstTileIndex.Col - secondTileIndex.Col);
         }
 
         public static bool operator !=(TileIndex firstTileIndex, TileIndex secondTileIndex)
@@ -44,7 +44,7 @@ namespace Diwide.Checkers
 
         protected bool Equals(TileIndex other)
         {
-            return Col == other.Col && Row == other.Row;
+            return Row == other.Row && Col == other.Col;
         }
         
         public override string ToString()
