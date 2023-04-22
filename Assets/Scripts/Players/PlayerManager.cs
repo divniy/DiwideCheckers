@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Zenject;
 
 namespace Diwide.Checkers
@@ -34,38 +32,5 @@ namespace Diwide.Checkers
         {
             _currentPlayerIndex = (_currentPlayerIndex + 1) % 2;
         } 
-    }
-
-    public class Player
-    {
-        [Inject] private TilesRegistry _registry;
-        public ColorType PawnsColor { get; }
-        
-        public Player(ColorType pawnsColor)
-        {
-            PawnsColor = pawnsColor;
-        }
-
-        public void StartTurn()
-        {
-            foreach (var pawnFacade in Pawns())
-            {
-                pawnFacade.GenerateValidMoves();
-            }
-        }
-
-        public IEnumerable<PawnFacade> Pawns()
-        {
-            var pawns = new List<PawnFacade>();
-            foreach (var tileFacade in _registry.TileFacades.Where(_=>_.PawnFacade != null && _.PawnFacade.Color == PawnsColor))
-            {
-                pawns.Add(tileFacade.PawnFacade);
-            }
-            return pawns;
-        }
-        public class Factory : PlaceholderFactory<ColorType, Player>
-        {
-            
-        }
     }
 }

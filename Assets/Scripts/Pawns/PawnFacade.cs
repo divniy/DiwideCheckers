@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Diwide.Checkers
 {
-    public class PawnFacade : MonoBehaviour, IInitializable
+    public class PawnFacade : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private MeshRenderer _renderer;
 
@@ -38,6 +38,12 @@ namespace Diwide.Checkers
             _renderer.material = _color == ColorType.Black 
                 ? _settings.BlackPawnMaterial 
                 : _settings.WhitePawnMaterial;
+        }
+        
+        public void Dispose()
+        {
+            _tileFacade.PawnFacade = null;
+            Destroy(gameObject);
         }
 
         public void PlaceOnTile(TileFacade tileFacade)
