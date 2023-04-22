@@ -1,3 +1,6 @@
+using System;
+using JetBrains.Annotations;
+
 namespace Diwide.Checkers
 {
     public class TileIndex
@@ -30,20 +33,24 @@ namespace Diwide.Checkers
 
         public static bool operator ==(TileIndex firstTileIndex, TileIndex secondTileIndex)
         {
+            if (ReferenceEquals(null, firstTileIndex) && ReferenceEquals(null, secondTileIndex)) return true;
             if (ReferenceEquals(null, firstTileIndex)) return false;
             return firstTileIndex.Equals(secondTileIndex);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
+            // TileIndex other = (TileIndex)obj;
+            // return  Row == other.Row && Col == other.Col;
             return Equals((TileIndex)obj);
         }
 
         protected bool Equals(TileIndex other)
         {
+            if (ReferenceEquals(null, other)) return false;
             return Row == other.Row && Col == other.Col;
         }
         

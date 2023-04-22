@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -7,11 +8,12 @@ namespace Diwide.Checkers
     public class PathFinder
     {
         public PawnFacade Pawn { get; }
-        public List<PawnMove> ValidMoves = new();
+        public List<IMovable> ValidMoves = new();
         
         private TileIndex FromIndex => Pawn.Index;
         [Inject] private TilesRegistry _registry;
         [Inject] private MoveValidator _moveValidator;
+        [Inject] private PlayerManager _playerManager;
 
         [Inject]
         public PathFinder(PawnFacade pawn)
@@ -21,34 +23,29 @@ namespace Diwide.Checkers
 
         public void GenerateValidMoves()
         {
-            // Debug.Log(GetRelativeTile(1, -1));
             ValidMoves = new();
-            AddMoveIfValid(1, -1);
-            AddMoveIfValid(1, 1);
-        }
-
-        public void AddMoveIfValid(int deltaRow, int deltaCol)
-        {
-            var ToIndex = FromIndex + new TileIndex(deltaRow, deltaCol);
-            var move = new PawnMove(FromIndex, ToIndex);
-            if (_moveValidator.IsValid(move))
+            var moves = new List<IMovable>();
+            if (_playerManager.CurrentPlayer.PawnsColor == ColorType.Black)
             {
-                ValidMoves.Add(move);
-                Debug.LogFormat("New valid {0}", move);
+                moves.Add(new PawnMove(Pawn, new TileIndex(1, -1)));
+                moves.Add(new PawnMove(Pawn, new TileIndex(1, 1)));
+                // AddMoveIfValid<PawnMove>(new PawnMove(Pawn, new TileIndex(1, -1)));
+                // AddMoveIfValid(1, -1, (from, to) => new PawnMove(from, to));
+                // AddMoveIfValid(1, 1, (from, to) => new PawnMove(from, to));
             }
+            else
+            {
+                moves.Add(new PawnMove(Pawn, new TileIndex(-1, -1)));
+                moves.Add(new PawnMove(Pawn, new TileIndex(-1, 1)));
+                // AddMoveIfValid(-1, -1, (from, to) => new PawnMove(from, to));
+                // AddMoveIfValid(-1, 1, (from, to) => new PawnMove(from, to));
+            }
+            moves.Add(new PawnAttack(Pawn, new TileIndex(2, -2)));
+            moves.Add(new PawnAttack(Pawn, new TileIndex(2, 2)));
+            moves.Add(new PawnAttack(Pawn, new TileIndex(-2, -2)));
+            moves.Add(new PawnAttack(Pawn, new TileIndex(-2, 2)));
+            ValidMoves = moves.FindAll(_ => _moveValidator.IsValid(_));
+            ValidMoves.ForEach(m => Debug.LogFormat("Valid {0}", m));
         }
-
-        public TileFacade GetRelativeTile(int row, int col)
-        {
-            return GetRelativeTile(new TileIndex(row, col));
-        }
-
-        public TileFacade GetRelativeTile(TileIndex deltaIndex)
-        {
-            var destIndex = new TileIndex(FromIndex.Row + deltaIndex.Row, FromIndex.Col + deltaIndex.Col);
-            return _registry.GetTileFacade(destIndex);
-        }
-        
-        
     }
 }

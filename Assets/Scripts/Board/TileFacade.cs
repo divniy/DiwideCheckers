@@ -9,6 +9,8 @@ namespace Diwide.Checkers
         [SerializeField] private Renderer _renderer;
         [Inject] private GameInstaller.Settings _settings;
         [Inject] private TilesRegistry _registry;
+        [Inject] private TilePointerHandler _pointerHandler;
+        public bool IsValidMove => _pointerHandler.IsValidMove;
 
         public PawnFacade PawnFacade { get; set; } = null;
         // private PawnFacade.Factory _pawnFactory;
@@ -20,6 +22,8 @@ namespace Diwide.Checkers
         // }
         
         public Tile Tile { get; private set; }
+        public TilePointerHandler PointerHandler => _pointerHandler; 
+        
         private IMemoryPool _pool;
 
         public TileIndex Index => Tile.Index; 

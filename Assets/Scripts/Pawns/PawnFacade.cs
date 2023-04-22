@@ -10,7 +10,7 @@ namespace Diwide.Checkers
         [SerializeField] private MeshRenderer _renderer;
 
         [Inject] private GameInstaller.Settings _settings;
-        [Inject] private TileFacade _tileFacade;
+        private TileFacade _tileFacade;
         [Inject] private ColorType _color;
         [Inject] private TilesRegistry _registry;
         [Inject] private PathFinder _pathFinder;
@@ -18,7 +18,7 @@ namespace Diwide.Checkers
         public TileIndex Index => _tileFacade.Index;
         public ColorType Color => _color;
 
-        public List<PawnMove> ValidMoves => _pathFinder.ValidMoves;
+        public List<IMovable> ValidMoves => _pathFinder.ValidMoves;
 
         public void GenerateValidMoves()
         {
@@ -34,13 +34,21 @@ namespace Diwide.Checkers
 
         public void Initialize()
         {
-            _registry.GetTileFacade(Index).PawnFacade = this;
+            // _registry.GetTileFacade(Index).PawnFacade = this;
             _renderer.material = _color == ColorType.Black 
                 ? _settings.BlackPawnMaterial 
                 : _settings.WhitePawnMaterial;
         }
 
-        public class Factory : PlaceholderFactory<TileFacade, ColorType, PawnFacade>
+        public void PlaceOnTile(TileFacade tileFacade)
+        {
+            if (_tileFacade != null) _tileFacade.PawnFacade = null;
+            _tileFacade = tileFacade;
+            _tileFacade.PawnFacade = this;
+            transform.SetParent(_tileFacade.transform, false);
+        }
+
+        public class Factory : PlaceholderFactory<ColorType, PawnFacade>
         {
         }
     }

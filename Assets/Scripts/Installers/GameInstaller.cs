@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
@@ -11,8 +13,13 @@ namespace Diwide.Checkers
 
         public override void InstallBindings()
         {
+            SignalBusInstaller.Install(Container);
+            Container.DeclareSignal<TileSelectedSignal>();
+            Container.DeclareSignal<SelectValidMoveSignal>();
+            
             Container.Bind<TilesRegistry>().AsSingle().NonLazy();
             Container.Bind<MoveValidator>().AsSingle().NonLazy();
+            Container.Bind<PawnMover>().AsSingle().NonLazy();
             
             Container.BindFactory<TileIndex, TileFacade, TileFacade.Factory>()
                 .FromMonoPoolableMemoryPool(x => x
@@ -23,7 +30,7 @@ namespace Diwide.Checkers
 
             Container.BindInterfacesTo<BoardGenerator>().AsSingle().NonLazy();
 
-            Container.BindFactory<TileFacade, ColorType, PawnFacade, PawnFacade.Factory>()
+            Container.BindFactory<ColorType, PawnFacade, PawnFacade.Factory>()
                 .FromSubContainerResolve()
                 .ByNewPrefabMethod(_settings.PawnPrefab, InstallPawn);
 
@@ -31,6 +38,11 @@ namespace Diwide.Checkers
 
             Container.BindFactory<ColorType, Player, Player.Factory>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<PlayerManager>().AsSingle().NonLazy();
+
+            Container.Bind<ValidPathHighlighter>().AsSingle().NonLazy();
+            Container.BindSignal<TileSelectedSignal>()
+                .ToMethod<ValidPathHighlighter>(x => x.OnTileSelectedSignal)
+                .FromResolve();
             
             Container.BindExecutionOrder<BoardGenerator>(-30);
             Container.BindExecutionOrder<PawnsGenerator>(-20);
@@ -43,17 +55,22 @@ namespace Diwide.Checkers
             subcontainer.Bind<Tile>().AsSingle().NonLazy();
             subcontainer.BindInterfacesAndSelfTo<TilePointerHandler>()
                 .FromComponentOnRoot().AsSingle().NonLazy();
+            subcontainer.BindSignal<SelectValidMoveSignal>()
+                .ToMethod<TilePointerHandler>((x, s) =>
+                {
+                    if(s.TileIndexes.Contains(x.TileIndex)) x.OnSelectValidDestination(s.IsSelected);
+                }).FromResolve();
 
             // var tileFacade = subcontainer.Resolve<TileFacade>();
-            
+
             // .FromComponentInNewPrefab(_settings.PawnPrefab)
             // .UnderTransform(tileFacade.transform);
         }
 
-        private void InstallPawn(DiContainer subcontainer, TileFacade tileFacade, ColorType color)
+        private void InstallPawn(DiContainer subcontainer, ColorType color)
         {
-            subcontainer.Bind<TileFacade>().FromInstance(tileFacade);
-            subcontainer.Bind<ColorType>().FromInstance(color);
+            // subcontainer.Bind<TileFacade>().FromInstance(tileFacade);
+            subcontainer.Bind<ColorType>().FromInstance(color).AsSingle().NonLazy();
             subcontainer.BindInterfacesAndSelfTo<PawnFacade>()
                 .FromComponentOnRoot().AsSingle().NonLazy();
             subcontainer.BindInterfacesAndSelfTo<PathFinder>().AsSingle().NonLazy();
@@ -68,8 +85,15 @@ namespace Diwide.Checkers
             public Material WhiteTileMaterial;
             public Material BlackTileMaterial;
             [FormerlySerializedAs("TargetTileMaterial")] public Material TargetingTileMaterial;
+            public Material ValidMoveMaterial;
             public Material WhitePawnMaterial;
             public Material BlackPawnMaterial;
         }
+    }
+
+    public class SelectValidMoveSignal
+    {
+        public List<TileIndex> TileIndexes;
+        public bool IsSelected = true;
     }
 }

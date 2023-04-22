@@ -23,6 +23,17 @@ namespace Diwide.Checkers
         {
             CurrentPlayer.StartTurn();
         }
+
+        public void EndPlayerTurn()
+        {
+            SwitchPlayers();
+            StartPlayerTurn();
+        }
+
+        private void SwitchPlayers()
+        {
+            _currentPlayerIndex = (_currentPlayerIndex + 1) % 2;
+        } 
     }
 
     public class Player
