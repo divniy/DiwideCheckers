@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameInstaller:
     BoardSize: 8
-    TilePrefab: {fileID: 6763332172749798618, guid: 60f349f00a90e4e29bf6654052d3c574, type: 3}
-    PawnPrefab: {fileID: 2369744030318376291, guid: 8fe1da9a96d7a4966b99f9a3dfc12527, type: 3}
+    TilePrefab: {fileID: 6763332172749798618, guid: 8c5590206f583458c87075a22413cbda, type: 3}
+    PawnPrefab: {fileID: 2369744030318376291, guid: a8a4df76fd4cc47708d6540367a890f5, type: 3}
     WhiteTileMaterial: {fileID: 2100000, guid: 63de10170c88642c99f6ba94363c9796, type: 2}
     BlackTileMaterial: {fileID: 2100000, guid: f029fda576d3843b39bc24896fe197df, type: 2}
     TargetingTileMaterial: {fileID: 2100000, guid: a3adafbd784b54c0e9ac16bfad6249ea, type: 2}

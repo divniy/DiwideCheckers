@@ -19,7 +19,7 @@ namespace Diwide.Checkers
             
             Container.Bind<TilesRegistry>().AsSingle().NonLazy();
             Container.Bind<MoveValidator>().AsSingle().NonLazy();
-            Container.Bind<PawnMover>().AsSingle().NonLazy();
+            Container.Bind<PawnMover>().FromComponentInHierarchy().AsSingle().NonLazy();
             
             Container.BindFactory<TileIndex, TileFacade, TileFacade.Factory>()
                 .FromSubContainerResolve()
