@@ -42,7 +42,7 @@ namespace Diwide.Checkers
                 pawn.ValidMoves.Any()
             )
             {
-                Debug.LogFormat("Clicked pawn on {0}", pawn.Index);
+                Debug.LogFormat("Clicked pawn on {0}", pawn.TileIndex);
                 if(_selectedPawn != null) UnselectPawn();
                 HighlightPawnMoves(pawn);
             }
