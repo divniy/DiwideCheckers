@@ -15,7 +15,7 @@ namespace Diwide.Checkers
         [Inject] private TilesRegistry _registry;
         [Inject] private PathFinder _pathFinder;
 
-        public TileIndex Index => _tileFacade.Index;
+        public TileIndex Index => _tileFacade.TileIndex;
         public ColorType Color => _color;
 
         public List<IMovable> ValidMoves => _pathFinder.ValidMoves;

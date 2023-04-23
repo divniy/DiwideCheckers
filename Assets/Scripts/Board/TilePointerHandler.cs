@@ -9,7 +9,7 @@ namespace Diwide.Checkers
         [Inject] private GameInstaller.Settings _settings;
         [Inject] private TileFacade _tileFacade;
         [Inject] private SignalBus _signalBus;
-        public TileIndex TileIndex => _tileFacade.Index;
+        public TileIndex TileIndex => _tileFacade.TileIndex;
         public bool IsValidMove { get; private set; } = false;
         
         public override void OnPointerEnter(PointerEventData eventData)

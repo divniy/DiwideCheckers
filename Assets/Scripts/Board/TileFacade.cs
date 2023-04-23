@@ -4,13 +4,19 @@ using Zenject;
 
 namespace Diwide.Checkers
 {
-    public class TileFacade : MonoBehaviour, IPoolable<TileIndex, IMemoryPool>, IDisposable
+    public class TileFacade : MonoBehaviour, IInitializable
     {
         [SerializeField] private Renderer _renderer;
+        [Inject] public TileIndex TileIndex{ get; private set; }
+        
         [Inject] private GameInstaller.Settings _settings;
         [Inject] private TilesRegistry _registry;
         [Inject] private TilePointerHandler _pointerHandler;
         public bool IsValidMove => _pointerHandler.IsValidMove;
+        
+        public ColorType TileColor => (TileIndex.Row + TileIndex.Col) % 2 != 0 
+            ? ColorType.White 
+            : ColorType.Black;
 
         public PawnFacade PawnFacade { get; set; } = null;
         // private PawnFacade.Factory _pawnFactory;
@@ -21,45 +27,23 @@ namespace Diwide.Checkers
         //     _pawnFactory = pawnFactory;
         // }
         
-        public Tile Tile { get; private set; }
-        public TilePointerHandler PointerHandler => _pointerHandler; 
+        // public Tile Tile { get; private set; }
+        public TilePointerHandler PointerHandler => _pointerHandler;
+
         
-        private IMemoryPool _pool;
-
-        public TileIndex Index => Tile.Index; 
-
-        [Inject]
-        public void Construct(Tile tile)
+        private void Awake()
         {
-            Tile = tile;
-        }
-        
-        public void OnDespawned()
-        {
-            _pool = null;
-        }
-
-        public void OnSpawned(TileIndex index, IMemoryPool pool)
-        {
-            _pool = pool;
-            Tile.Index = index;
-            transform.Translate(index.Col, 0, index.Row);
-            _renderer.material = Tile.Color == ColorType.White 
-                ? _settings.WhiteTileMaterial 
-                : _settings.BlackTileMaterial;
             _registry.Add(this);
         }
 
-        public void Dispose()
+        public void Initialize()
         {
-            _pool.Despawn(this);
+            transform.Translate(TileIndex.Col, 0, TileIndex.Row);
+            _renderer.material = TileColor == ColorType.White 
+                ? _settings.WhiteTileMaterial 
+                : _settings.BlackTileMaterial;
         }
 
-        // public void CreatePawn(ColorType color)
-        // {
-        //     _pawnFactory.Create(Index, color);
-        // }
-        
         public class Factory : PlaceholderFactory<TileIndex, TileFacade>
         {
         }

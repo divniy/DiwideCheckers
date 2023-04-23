@@ -30,7 +30,7 @@ namespace Diwide.Checkers
 
         private void MoveSelectedPawnTo(TileFacade destinationTile)
         {
-            IMovable move = _selectedPawn.ValidMoves.Find(_ => _.To == destinationTile.Index);
+            IMovable move = _selectedPawn.ValidMoves.Find(_ => _.To == destinationTile.TileIndex);
             UnselectPawn();
             _pawnMover.PerformMove(move);
         }
