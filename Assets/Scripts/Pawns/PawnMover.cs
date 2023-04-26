@@ -25,30 +25,30 @@ namespace Diwide.Checkers
             _pawn.AssignWithTile(targetTile, true);
             if (!IsCapturingMove())
             {
-                MovePawn(targetTile.transform.position);
+                MovePawn(targetTile.transform.position, OnCompleteMove);
             }
             else
             {
-                CaptureMovePawn(targetTile.transform.position);
+                CaptureMovePawn(targetTile.transform.position, OnCompleteMove);
             }
         }
 
-        private void MovePawn(Vector3 target)
+        private void MovePawn(Vector3 target, TweenCallback callback)
         {
             
             _pawn.transform
                 .DOMove(target, _settings.HorizontalMoveDuration)
-                .OnComplete(OnCompleteMove);
+                .OnComplete(callback);
         }
 
-        private void CaptureMovePawn(Vector3 target)
+        private void CaptureMovePawn(Vector3 target, TweenCallback callback)
         {
             float height = _settings.CaptureMoveHeight;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_pawn.transform.DOMoveY(height, _settings.VerticalMoveDuration));
             sequence.Append(_pawn.transform.DOMove(target + Vector3.up * height, _settings.HorizontalMoveDuration));
             sequence.Append(_pawn.transform.DOMoveY(target.y, _settings.VerticalMoveDuration));
-            sequence.OnComplete(OnCompleteMove);
+            sequence.OnComplete(callback);
         }
         
         private void OnCompleteMove()

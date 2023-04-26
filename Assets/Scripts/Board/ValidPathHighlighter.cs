@@ -15,6 +15,7 @@ namespace Diwide.Checkers
         private List<TileIndex> _validMovesIndexes;
         public void OnTileSelectedSignal(TileSelectedSignal signal)
         {
+            if(_pawnMover.IsPawnMoving) return;
             if (signal.Tile.PawnFacade != null)
             {
                 SelectPawn(signal.Tile.PawnFacade);
