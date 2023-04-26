@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Zenject;
+using DG.Tweening;
 
 namespace Diwide.Checkers
 {
@@ -8,52 +10,70 @@ namespace Diwide.Checkers
     {
         [Inject] private TilesRegistry _registry;
         [Inject] private PlayerManager _playerManager;
-        [SerializeField] private float MovementSmoothing = 12;
+        [Inject] private Settings _settings;
         public bool IsPawnMoving = false;
+        private IMovable _move;
         private PawnFacade _pawn;
-        // private TileFacade _targetTile;
 
         public void PerformMove(IMovable move)
         {
             Debug.LogFormat("Perform {0}", move);
+            _move = move;
             _pawn = _registry.GetPawnFacade(move.From);
             var targetTile = _registry.GetTileFacade(move.To);
-            CapturePawn(move);
-            MovePawn(targetTile);
-        }
-
-        private void MovePawn(TileFacade targetTile)
-        {
-            _pawn.AssignWithTile(targetTile, true);
-            StartCoroutine(AnimatedPawnMove(targetTile.transform.position));
-        }
-
-        private IEnumerator AnimatedPawnMove(Vector3 target)
-        {
             IsPawnMoving = true;
-            yield return HorizontalPawnMove(target);
+            _pawn.AssignWithTile(targetTile, true);
+            if (!IsCapturingMove())
+            {
+                MovePawn(targetTile.transform.position);
+            }
+            else
+            {
+                CaptureMovePawn(targetTile.transform.position);
+            }
+        }
+
+        private void MovePawn(Vector3 target)
+        {
+            
+            _pawn.transform
+                .DOMove(target, _settings.HorizontalMoveDuration)
+                .OnComplete(OnCompleteMove);
+        }
+
+        private void CaptureMovePawn(Vector3 target)
+        {
+            float height = _settings.CaptureMoveHeight;
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(_pawn.transform.DOMoveY(height, _settings.VerticalMoveDuration));
+            sequence.Append(_pawn.transform.DOMove(target + Vector3.up * height, _settings.HorizontalMoveDuration));
+            sequence.Append(_pawn.transform.DOMoveY(target.y, _settings.VerticalMoveDuration));
+            sequence.OnComplete(OnCompleteMove);
+        }
+        
+        private void OnCompleteMove()
+        {
+            if(IsCapturingMove()) CapturePawn();
             IsPawnMoving = false;
             _playerManager.EndPlayerTurn();
         }
 
-        private IEnumerator HorizontalPawnMove(Vector3 target)
+        private bool IsCapturingMove()
         {
-            var pawnTransform = _pawn.transform;
-            Debug.LogFormat("Pawn pos: {0} target pos: {1}", pawnTransform.position, target);
-            while (Vector3.Distance(pawnTransform.position, target) > .01f)
-            {
-                pawnTransform.position = Vector3.Lerp(pawnTransform.position, target, MovementSmoothing * Time.deltaTime);
-                yield return null;
-            }
+            return _move.Middle != null;
         }
 
-        private void CapturePawn(IMovable move)
+        private void CapturePawn()
         {
-            if (move.Middle != null)
-            {
-                var enemy = _registry.GetPawnFacade(move.Middle);
-                enemy.Dispose();
-            }
+            _registry.GetPawnFacade(_move.Middle).Dispose();
+        }
+
+        [Serializable]
+        public class Settings
+        {
+            public float HorizontalMoveDuration;
+            public float VerticalMoveDuration;
+            public float CaptureMoveHeight;
         }
     }
 }
