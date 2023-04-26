@@ -17,7 +17,7 @@ namespace Diwide.Checkers
             Container.DeclareSignal<TileSelectedSignal>();
             Container.DeclareSignal<SelectValidMoveSignal>();
             
-            Container.Bind<TilesRegistry>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<TilesRegistry>().AsSingle().NonLazy();
             Container.Bind<MoveValidator>().AsSingle().NonLazy();
             Container.Bind<PawnMover>().FromComponentInHierarchy().AsSingle().NonLazy();
             
@@ -42,6 +42,7 @@ namespace Diwide.Checkers
                 .ToMethod<ValidPathHighlighter>(x => x.OnTileSelectedSignal)
                 .FromResolve();
             
+            Container.BindExecutionOrder<TilesRegistry>(-40);
             Container.BindExecutionOrder<BoardGenerator>(-30);
             Container.BindExecutionOrder<PawnsGenerator>(-20);
             Container.BindExecutionOrder<PlayerManager>(-10);

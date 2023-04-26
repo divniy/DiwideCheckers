@@ -19,8 +19,8 @@ namespace Diwide.Checkers
         {
             Debug.LogFormat("Perform {0}", move);
             _move = move;
-            _pawn = _registry.GetPawnFacade(move.From);
-            var targetTile = _registry.GetTileFacade(move.To);
+            _pawn = _registry[move.From].PawnFacade;
+            var targetTile = _registry[move.To];
             IsPawnMoving = true;
             _pawn.AssignWithTile(targetTile, true);
             if (!IsCapturingMove())
