@@ -10,10 +10,10 @@ namespace Diwide.Checkers
         public IEnumerable<TileFacade> TileFacades => _tileFacades;
 
         public IEnumerable<TileFacade> InitialBlackPawnTiles => _tileFacades
-            .Where(_ => _.Index.Row <= 2).Where(_ => _.Tile.Color == ColorType.Black);
+            .Where(_ => _.TileIndex.Row <= 2).Where(_ => _.TileColor == ColorType.Black);
 
         public IEnumerable<TileFacade> InitialWhitePawnTiles => _tileFacades
-            .Where(_ => _.Index.Row >= 5).Where(_ => _.Tile.Color == ColorType.Black);
+            .Where(_ => _.TileIndex.Row >= 5).Where(_ => _.TileColor == ColorType.Black);
         
         public void Add(TileFacade tile)
         {
@@ -22,7 +22,7 @@ namespace Diwide.Checkers
 
         public TileFacade GetTileFacade(TileIndex index)
         {
-            return _tileFacades.Find(_ => _.Index.Equals(index));
+            return _tileFacades.Find(_ => _.TileIndex.Equals(index));
         }
 
         public PawnFacade GetPawnFacade(TileIndex index)
@@ -32,7 +32,7 @@ namespace Diwide.Checkers
 
         public bool IsTileExists(TileIndex index)
         {
-            return _tileFacades.Exists(_ => _.Index == index);
+            return _tileFacades.Exists(_ => _.TileIndex == index);
         }
     }
 }

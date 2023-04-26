@@ -17,7 +17,7 @@ namespace Diwide.Checkers
             Middle = null;
         }
 
-        public PawnMove(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.Index, pawnFacade.Index + relativeTo)
+        public PawnMove(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.TileIndex, pawnFacade.TileIndex + relativeTo)
         {
         }
 

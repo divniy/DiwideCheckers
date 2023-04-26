@@ -10,7 +10,7 @@ namespace Diwide.Checkers
         public PawnFacade Pawn { get; }
         public List<IMovable> ValidMoves = new();
         
-        private TileIndex FromIndex => Pawn.Index;
+        private TileIndex FromIndex => Pawn.TileIndex;
         [Inject] private TilesRegistry _registry;
         [Inject] private MoveValidator _moveValidator;
         [Inject] private PlayerManager _playerManager;
@@ -45,6 +45,7 @@ namespace Diwide.Checkers
             moves.Add(new PawnAttack(Pawn, new TileIndex(-2, -2)));
             moves.Add(new PawnAttack(Pawn, new TileIndex(-2, 2)));
             ValidMoves = moves.FindAll(_ => _moveValidator.IsValid(_));
+            
             ValidMoves.ForEach(m => Debug.LogFormat("Valid {0}", m));
         }
     }

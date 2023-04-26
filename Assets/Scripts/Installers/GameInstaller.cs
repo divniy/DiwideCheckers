@@ -19,14 +19,12 @@ namespace Diwide.Checkers
             
             Container.Bind<TilesRegistry>().AsSingle().NonLazy();
             Container.Bind<MoveValidator>().AsSingle().NonLazy();
-            Container.Bind<PawnMover>().AsSingle().NonLazy();
+            Container.Bind<PawnMover>().FromComponentInHierarchy().AsSingle().NonLazy();
             
             Container.BindFactory<TileIndex, TileFacade, TileFacade.Factory>()
-                .FromMonoPoolableMemoryPool(x => x
-                    .WithInitialSize(64)
-                    .FromSubContainerResolve()
-                    .ByNewPrefabMethod(_settings.TilePrefab, InstallTile)
-                    .UnderTransformGroup("Board"));
+                .FromSubContainerResolve()
+                .ByNewPrefabInstaller<TileInstaller>(_settings.TilePrefab)
+                .UnderTransformGroup("Board");
 
             Container.BindInterfacesTo<BoardGenerator>().AsSingle().NonLazy();
 
@@ -49,23 +47,7 @@ namespace Diwide.Checkers
             Container.BindExecutionOrder<PlayerManager>(-10);
         }
 
-        private void InstallTile(DiContainer subcontainer)
-        {
-            subcontainer.Bind<TileFacade>().FromComponentOnRoot().AsSingle().NonLazy();
-            subcontainer.Bind<Tile>().AsSingle().NonLazy();
-            subcontainer.BindInterfacesAndSelfTo<TilePointerHandler>()
-                .FromComponentOnRoot().AsSingle().NonLazy();
-            subcontainer.BindSignal<SelectValidMoveSignal>()
-                .ToMethod<TilePointerHandler>((x, s) =>
-                {
-                    if(s.TileIndexes.Contains(x.TileIndex)) x.OnSelectValidDestination(s.IsSelected);
-                }).FromResolve();
-
-            // var tileFacade = subcontainer.Resolve<TileFacade>();
-
-            // .FromComponentInNewPrefab(_settings.PawnPrefab)
-            // .UnderTransform(tileFacade.transform);
-        }
+        
 
         private void InstallPawn(DiContainer subcontainer, ColorType color)
         {

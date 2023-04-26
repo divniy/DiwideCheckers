@@ -8,9 +8,11 @@ namespace Diwide.Checkers
     public class SettingsInstaller : ScriptableObjectInstaller<SettingsInstaller>
     {
         public GameInstaller.Settings GameInstaller;
+        public PawnMover.Settings PawnMover;
         public override void InstallBindings()
         {
             Container.BindInstance(GameInstaller);
+            Container.BindInstance(PawnMover);
         }
     }
     

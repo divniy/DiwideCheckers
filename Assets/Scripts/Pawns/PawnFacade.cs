@@ -15,7 +15,7 @@ namespace Diwide.Checkers
         [Inject] private TilesRegistry _registry;
         [Inject] private PathFinder _pathFinder;
 
-        public TileIndex Index => _tileFacade.Index;
+        public TileIndex TileIndex => _tileFacade.TileIndex;
         public ColorType Color => _color;
 
         public List<IMovable> ValidMoves => _pathFinder.ValidMoves;
@@ -46,12 +46,12 @@ namespace Diwide.Checkers
             Destroy(gameObject);
         }
 
-        public void PlaceOnTile(TileFacade tileFacade)
+        public void AssignWithTile(TileFacade tileFacade, bool worldPositionStays = true)
         {
             if (_tileFacade != null) _tileFacade.PawnFacade = null;
             _tileFacade = tileFacade;
             _tileFacade.PawnFacade = this;
-            transform.SetParent(_tileFacade.transform, false);
+            transform.SetParent(_tileFacade.transform, worldPositionStays);
         }
 
         public class Factory : PlaceholderFactory<ColorType, PawnFacade>

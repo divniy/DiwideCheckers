@@ -8,7 +8,7 @@ namespace Diwide.Checkers
             Middle = From + new TileIndex(delta.Row / 2, delta.Col / 2);
         }
 
-        public PawnAttack(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.Index, pawnFacade.Index + relativeTo)
+        public PawnAttack(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.TileIndex, pawnFacade.TileIndex + relativeTo)
         {
         }
     }
