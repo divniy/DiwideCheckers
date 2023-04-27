@@ -9,6 +9,6 @@ namespace Diwide.Checkers
         
         TileIndex Middle { get; }
         
-        public class RelativeFactory : PlaceholderFactory<PawnFacade, TileIndex, IMovable> {}
+        public class RelativeFactory : PlaceholderFactory<PawnFacade, TileIndex, PawnMove> {}
     }
 }

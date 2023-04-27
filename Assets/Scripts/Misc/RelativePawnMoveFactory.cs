@@ -2,9 +2,9 @@ using Zenject;
 
 namespace Diwide.Checkers
 {
-    public class RelativePawnMoveFactory : IFactory<PawnFacade, TileIndex, IMovable>
+    public class RelativePawnMoveFactory : IFactory<PawnFacade, TileIndex, PawnMove>
     {
-        public IMovable Create(PawnFacade pawnFacade, TileIndex relativeTo)
+        public PawnMove Create(PawnFacade pawnFacade, TileIndex relativeTo)
         {
             var from = pawnFacade.TileIndex;
             var to = from + relativeTo;

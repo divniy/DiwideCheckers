@@ -1,14 +1,13 @@
 using System;
+using UnityEngine;
 using Zenject;
 
 namespace Diwide.Checkers
 {
-    [Serializable]
     public class PawnMove : IMovable
     {
-        public TileIndex From { get; }
-        public TileIndex To { get; }
-
+        public TileIndex From { get; private set; }
+        public TileIndex To { get; private set; }
         public TileIndex Middle { get; protected set; }
 
         // public PawnMove(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.TileIndex, pawnFacade.TileIndex + relativeTo)
@@ -24,7 +23,7 @@ namespace Diwide.Checkers
 
         public override string ToString()
         {
-            return $"{From} => {To}";
+            return $"{From} -> {To}";
         }
         
         // public class Factory : PlaceholderFactory<PawnFacade, TileIndex, PawnMove>

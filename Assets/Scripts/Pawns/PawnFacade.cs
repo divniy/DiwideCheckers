@@ -21,7 +21,7 @@ namespace Diwide.Checkers
 
         public Player Player => _playerManager.GetPlayer(_color);
 
-        public List<IMovable> ValidMoves => _pathFinder.ValidMoves;
+        public List<PawnMove> ValidMoves => _pathFinder.ValidMoves;
 
         public void GenerateValidMoves()
         {

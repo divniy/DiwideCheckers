@@ -1,13 +1,16 @@
 using System;
-using JetBrains.Annotations;
+using UnityEngine;
 using Zenject;
+using Object = System.Object;
 
 namespace Diwide.Checkers
 {
+    [Serializable]
     public class TileIndex
     {
-        public int Row { get; }
-        public int Col { get; }
+        // [SerializeField] private int _row;
+        [field: SerializeField] public int Row { get; private set; }
+        [field: SerializeField] public int Col { get; private set; }
 
         public TileIndex(int row, int col)
         {

@@ -9,6 +9,7 @@ namespace Diwide.Checkers
         // private Player[] _players = new Player[2];
         private Dictionary<ColorType, Player> _players = new();
         [Inject] private Player.Factory _playerFactory;
+        [Inject] private SignalBus _signalBus;
 
         public Player CurrentPlayer => _players[_currentPlayerIndex];
         
@@ -27,6 +28,7 @@ namespace Diwide.Checkers
         public void StartPlayerTurn()
         {
             CurrentPlayer.StartTurn();
+            _signalBus.Fire<WaitingForMovementSignal>();
         }
 
         public void EndPlayerTurn()

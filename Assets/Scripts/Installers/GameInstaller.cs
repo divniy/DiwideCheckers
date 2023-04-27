@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Diwide.Checkers.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
@@ -17,10 +18,11 @@ namespace Diwide.Checkers
             Container.DeclareSignal<TileSelectedSignal>();
             Container.DeclareSignal<SelectValidMoveSignal>();
             Container.DeclareSignal<MovePawnSignal>();
+            Container.DeclareSignal<WaitingForMovementSignal>().OptionalSubscriber();
 
             // Container.BindFactory<int, int, TileIndex, TileIndex.Factory>().AsSingle().NonLazy();
             // Container.BindFactory<PawnFacade, TileIndex, PawnMove, PawnMove.Factory>().AsSingle().NonLazy();
-            Container.BindFactory<PawnFacade, TileIndex, IMovable, IMovable.RelativeFactory>()
+            Container.BindFactory<PawnFacade, TileIndex, PawnMove, IMovable.RelativeFactory>()
                 .FromFactory<RelativePawnMoveFactory>();
             Container.BindInterfacesAndSelfTo<TilesRegistry>().AsSingle().NonLazy();
             Container.Bind<MoveValidator>().AsSingle().NonLazy();
@@ -44,13 +46,25 @@ namespace Diwide.Checkers
             Container.BindFactory<ColorType, Player, Player.Factory>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<PlayerManager>().AsSingle().NonLazy();
 
-            Container.Bind<ValidPathHighlighter>().AsSingle().NonLazy();
-            Container.BindSignal<TileSelectedSignal>()
-                .ToMethod<ValidPathHighlighter>(x => x.OnTileSelectedSignal)
-                .FromResolve();
+            if (_settings.MovableMode != MovableMode.Playing)
+            {
+                Container.Bind<ValidPathHighlighter>().AsSingle().NonLazy();
+                Container.BindSignal<TileSelectedSignal>()
+                    .ToMethod<ValidPathHighlighter>(x => x.OnTileSelectedSignal)
+                    .FromResolve();
+            }
+            
+            if (_settings.MovableMode == MovableMode.Recording)
+            {
+                Container.BindInterfacesTo<MovableObserver>().AsSingle();
+            }
+            else
+            {
+                Container.BindInterfacesTo<MovableReplayer>().AsSingle();
+            }
 
             Container.BindInterfacesTo<GameInitializer>().AsSingle();
-            
+
             Container.BindExecutionOrder<TilesRegistry>(-40);
             Container.BindExecutionOrder<BoardGenerator>(-30);
             Container.BindExecutionOrder<PlayerManager>(-20);
@@ -89,6 +103,7 @@ namespace Diwide.Checkers
             public Material ValidMoveMaterial;
             public Material WhitePawnMaterial;
             public Material BlackPawnMaterial;
+            public MovableMode MovableMode = MovableMode.Recording;
         }
     }
 
@@ -100,6 +115,14 @@ namespace Diwide.Checkers
 
     public class MovePawnSignal
     {
-        public IMovable Movable;
+        public PawnMove Movable;
+    }
+    
+    public class WaitingForMovementSignal{}
+
+    public enum MovableMode
+    {
+        Recording,
+        Playing
     }
 }

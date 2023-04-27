@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aab2834489c3405696bb0a54aa30043b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsPawnMoving: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
   - {fileID: 11400000, guid: 4171580cfccfe419480e854ab00900cb, type: 2}
+  - {fileID: 11400000, guid: 2a698d67379d7472fa39cb1c5531406a, type: 2}
   _monoInstallers:
   - {fileID: 1205194356}
   _installerPrefabs: []
