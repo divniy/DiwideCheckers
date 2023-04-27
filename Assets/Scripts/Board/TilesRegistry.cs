@@ -68,7 +68,7 @@ namespace Diwide.Checkers
             {
                 return this[index] != null;
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
                 return false;
             }
