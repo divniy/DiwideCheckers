@@ -12,24 +12,16 @@ namespace Diwide.Checkers
         [Inject] private PawnFacade Pawn;
         [Inject] private MoveValidator _moveValidator;
         [Inject] private PlayerManager _playerManager;
-        [Inject] private PawnMoveFactory _moveFactory;
+        [Inject] private IMovable.RelativeFactory _moveFactory;
 
         public void GenerateValidMoves()
         {
             ValidMoves = new();
             var moves = new List<IMovable>();
-            
-            if (_playerManager.CurrentPlayer.PawnsColor == ColorType.Black)
-            {
-                moves.Add(_moveFactory.Create(Pawn, new TileIndex(1, -1)));
-                moves.Add(_moveFactory.Create(Pawn, new TileIndex(1, 1)));
-            }
-            else
-            {
-                moves.Add(_moveFactory.Create(Pawn, new TileIndex(-1, -1)));
-                moves.Add(_moveFactory.Create(Pawn, new TileIndex(-1, 1)));
-            }
+            int moveRow = _playerManager.CurrentPlayer.PawnsColor == ColorType.Black ? 1 : -1;
 
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(moveRow, -1)));
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(moveRow, 1)));
             moves.Add(_moveFactory.Create(Pawn, new TileIndex(2, -2)));
             moves.Add(_moveFactory.Create(Pawn, new TileIndex(2, 2)));
             moves.Add(_moveFactory.Create(Pawn, new TileIndex(-2, -2)));
