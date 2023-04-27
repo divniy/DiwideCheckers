@@ -16,6 +16,7 @@ namespace Diwide.Checkers
             SignalBusInstaller.Install(Container);
             Container.DeclareSignal<TileSelectedSignal>();
             Container.DeclareSignal<SelectValidMoveSignal>();
+            Container.DeclareSignal<MovePawnSignal>();
 
             // Container.BindFactory<int, int, TileIndex, TileIndex.Factory>().AsSingle().NonLazy();
             // Container.BindFactory<PawnFacade, TileIndex, PawnMove, PawnMove.Factory>().AsSingle().NonLazy();
@@ -24,6 +25,8 @@ namespace Diwide.Checkers
             Container.BindInterfacesAndSelfTo<TilesRegistry>().AsSingle().NonLazy();
             Container.Bind<MoveValidator>().AsSingle().NonLazy();
             Container.Bind<PawnMover>().FromComponentInHierarchy().AsSingle().NonLazy();
+            Container.BindSignal<MovePawnSignal>()
+                .ToMethod<PawnMover>((_, s) => _.PerformMove(s.Movable)).FromResolve();
             
             Container.BindFactory<TileIndex, TileFacade, TileFacade.Factory>()
                 .FromSubContainerResolve()
@@ -93,5 +96,10 @@ namespace Diwide.Checkers
     {
         public List<TileIndex> TileIndexes;
         public bool IsSelected = true;
+    }
+
+    public class MovePawnSignal
+    {
+        public IMovable Movable;
     }
 }
