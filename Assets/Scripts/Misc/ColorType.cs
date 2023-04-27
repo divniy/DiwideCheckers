@@ -2,7 +2,7 @@ namespace Diwide.Checkers
 {
     public enum ColorType : byte
     {
-        White,
-        Black
+        Black = 0,
+        White = 1
     }
 }

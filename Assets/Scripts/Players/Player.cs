@@ -17,21 +17,21 @@ namespace Diwide.Checkers
 
         public void StartTurn()
         {
-            SetPawns();
+            // SetPawns();
             foreach (var pawnFacade in Pawns)
             {
                 pawnFacade.GenerateValidMoves();
             }
         }
 
-        public void SetPawns()
+        /*public void SetPawns()
         {
             Pawns.Clear();
             foreach (var tileFacade in _registry.TileFacades.Where(_=>_.PawnFacade != null && _.PawnFacade.Color == PawnsColor))
             {
                 Pawns.Add(tileFacade.PawnFacade);
             }
-        }
+        }*/
         public class Factory : PlaceholderFactory<ColorType, Player>
         {
             

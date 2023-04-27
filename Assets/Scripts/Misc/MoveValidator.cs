@@ -35,7 +35,7 @@ namespace Diwide.Checkers
         {
             if (move.Middle == null) return true;
             // var pawn = _registry.GetPawnFacade(move.Middle);
-            var pawn = _registry.GetTileFacade(move.Middle)?.PawnFacade;
+            var pawn = _registry[move.Middle].PawnFacade;
             return pawn != null && pawn.Color != _playerManager.CurrentPlayer.PawnsColor;;
         }
     }

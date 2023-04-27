@@ -19,36 +19,36 @@ namespace Diwide.Checkers
         {
             Debug.LogFormat("Perform {0}", move);
             _move = move;
-            _pawn = _registry.GetPawnFacade(move.From);
-            var targetTile = _registry.GetTileFacade(move.To);
+            _pawn = _registry[move.From].PawnFacade;
+            var targetTile = _registry[move.To];
             IsPawnMoving = true;
             _pawn.AssignWithTile(targetTile, true);
             if (!IsCapturingMove())
             {
-                MovePawn(targetTile.transform.position, OnCompleteMove);
+                MovePawn(targetTile.transform.position);
             }
             else
             {
-                CaptureMovePawn(targetTile.transform.position, OnCompleteMove);
+                CaptureMovePawn(targetTile.transform.position);
             }
         }
 
-        private void MovePawn(Vector3 target, TweenCallback callback)
+        private void MovePawn(Vector3 target)
         {
             
             _pawn.transform
                 .DOMove(target, _settings.HorizontalMoveDuration)
-                .OnComplete(callback);
+                .OnComplete(() => OnCompleteMove());
         }
 
-        private void CaptureMovePawn(Vector3 target, TweenCallback callback)
+        private void CaptureMovePawn(Vector3 target)
         {
             float height = _settings.CaptureMoveHeight;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_pawn.transform.DOMoveY(height, _settings.VerticalMoveDuration));
             sequence.Append(_pawn.transform.DOMove(target + Vector3.up * height, _settings.HorizontalMoveDuration));
             sequence.Append(_pawn.transform.DOMoveY(target.y, _settings.VerticalMoveDuration));
-            sequence.OnComplete(callback);
+            sequence.OnComplete(() => OnCompleteMove());
         }
         
         private void OnCompleteMove()

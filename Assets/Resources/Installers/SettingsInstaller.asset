@@ -22,6 +22,7 @@ MonoBehaviour:
     ValidMoveMaterial: {fileID: 2100000, guid: 663c12232abf247e29c246c2618c9ed5, type: 2}
     WhitePawnMaterial: {fileID: 2100000, guid: 110fd1ba3667f4994a43877d7f5cd0fb, type: 2}
     BlackPawnMaterial: {fileID: 2100000, guid: 22d74385e61044a0a8843ee4cd77ef01, type: 2}
+    MovableMode: 1
   PawnMover:
     HorizontalMoveDuration: 0.5
     VerticalMoveDuration: 0.2

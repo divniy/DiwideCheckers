@@ -1,3 +1,5 @@
+using Zenject;
+
 namespace Diwide.Checkers
 {
     public interface IMovable
@@ -6,5 +8,7 @@ namespace Diwide.Checkers
         TileIndex To { get; }
         
         TileIndex Middle { get; }
+        
+        public class RelativeFactory : PlaceholderFactory<PawnFacade, TileIndex, PawnMove> {}
     }
 }

@@ -7,46 +7,29 @@ namespace Diwide.Checkers
 {
     public class PathFinder
     {
-        public PawnFacade Pawn { get; }
-        public List<IMovable> ValidMoves = new();
-        
-        private TileIndex FromIndex => Pawn.TileIndex;
-        [Inject] private TilesRegistry _registry;
+        public List<PawnMove> ValidMoves = new();
+
+        [Inject] private PawnFacade Pawn;
         [Inject] private MoveValidator _moveValidator;
         [Inject] private PlayerManager _playerManager;
-
-        [Inject]
-        public PathFinder(PawnFacade pawn)
-        {
-            Pawn = pawn;
-        }
+        [Inject] private IMovable.RelativeFactory _moveFactory;
 
         public void GenerateValidMoves()
         {
             ValidMoves = new();
-            var moves = new List<IMovable>();
-            if (_playerManager.CurrentPlayer.PawnsColor == ColorType.Black)
-            {
-                moves.Add(new PawnMove(Pawn, new TileIndex(1, -1)));
-                moves.Add(new PawnMove(Pawn, new TileIndex(1, 1)));
-                // AddMoveIfValid<PawnMove>(new PawnMove(Pawn, new TileIndex(1, -1)));
-                // AddMoveIfValid(1, -1, (from, to) => new PawnMove(from, to));
-                // AddMoveIfValid(1, 1, (from, to) => new PawnMove(from, to));
-            }
-            else
-            {
-                moves.Add(new PawnMove(Pawn, new TileIndex(-1, -1)));
-                moves.Add(new PawnMove(Pawn, new TileIndex(-1, 1)));
-                // AddMoveIfValid(-1, -1, (from, to) => new PawnMove(from, to));
-                // AddMoveIfValid(-1, 1, (from, to) => new PawnMove(from, to));
-            }
-            moves.Add(new PawnAttack(Pawn, new TileIndex(2, -2)));
-            moves.Add(new PawnAttack(Pawn, new TileIndex(2, 2)));
-            moves.Add(new PawnAttack(Pawn, new TileIndex(-2, -2)));
-            moves.Add(new PawnAttack(Pawn, new TileIndex(-2, 2)));
+            var moves = new List<PawnMove>();
+            int moveRow = _playerManager.CurrentPlayer.PawnsColor == ColorType.Black ? 1 : -1;
+
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(moveRow, -1)));
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(moveRow, 1)));
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(2, -2)));
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(2, 2)));
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(-2, -2)));
+            moves.Add(_moveFactory.Create(Pawn, new TileIndex(-2, 2)));
+            
             ValidMoves = moves.FindAll(_ => _moveValidator.IsValid(_));
             
-            ValidMoves.ForEach(m => Debug.LogFormat("Valid {0}", m));
+            ValidMoves.ForEach(m => Debug.LogFormat("Valid move: {0}", m));
         }
     }
 }

@@ -1,28 +1,59 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Zenject;
 
 namespace Diwide.Checkers
 {
-    public class TilesRegistry
+    public class TilesRegistry : IInitializable
     {
-        private List<TileFacade> _tileFacades = new();
+        [Inject] private GameInstaller.Settings _settings;
+        // private List<TileFacade> _tileFacades = new();
+        private TileFacade[,] _tileFacades;
+        
+        public void Initialize()
+        {
+            _tileFacades = new TileFacade[_settings.BoardSize,_settings.BoardSize];
+        }
 
-        public IEnumerable<TileFacade> TileFacades => _tileFacades;
+        public TileFacade this[int row, int col]
+        {
+            get { return _tileFacades[row, col]; }
+        }
 
-        public IEnumerable<TileFacade> InitialBlackPawnTiles => _tileFacades
+        public TileFacade this[TileIndex tileIndex]
+        {
+            get { return _tileFacades[tileIndex.Row, tileIndex.Col]; }
+        }
+        public IEnumerable<TileFacade> TileFacades
+        {
+            get
+            {
+                List<TileFacade> list = new List<TileFacade>();
+                foreach (TileFacade facade in _tileFacades)
+                {
+                    list.Add(facade);
+                }
+
+                return list;
+            }
+        }
+
+        public IEnumerable<TileFacade> InitialBlackPawnTiles => TileFacades
             .Where(_ => _.TileIndex.Row <= 2).Where(_ => _.TileColor == ColorType.Black);
 
-        public IEnumerable<TileFacade> InitialWhitePawnTiles => _tileFacades
+        public IEnumerable<TileFacade> InitialWhitePawnTiles => TileFacades
             .Where(_ => _.TileIndex.Row >= 5).Where(_ => _.TileColor == ColorType.Black);
         
         public void Add(TileFacade tile)
         {
-            _tileFacades.Add(tile);
+            _tileFacades[tile.TileIndex.Row, tile.TileIndex.Col] = tile;
         }
 
         public TileFacade GetTileFacade(TileIndex index)
         {
-            return _tileFacades.Find(_ => _.TileIndex.Equals(index));
+            // return _tileFacades.Find(_ => _.TileIndex.Equals(index));
+            return this[index];
         }
 
         public PawnFacade GetPawnFacade(TileIndex index)
@@ -32,7 +63,15 @@ namespace Diwide.Checkers
 
         public bool IsTileExists(TileIndex index)
         {
-            return _tileFacades.Exists(_ => _.TileIndex == index);
+            // return _tileFacades.Exists(_ => _.TileIndex == index);
+            try
+            {
+                return this[index] != null;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return false;
+            }
         }
     }
 }
