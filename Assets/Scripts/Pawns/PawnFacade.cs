@@ -14,9 +14,12 @@ namespace Diwide.Checkers
         [Inject] private ColorType _color;
         [Inject] private TilesRegistry _registry;
         [Inject] private PathFinder _pathFinder;
+        [Inject] private PlayerManager _playerManager;
 
         public TileIndex TileIndex => _tileFacade.TileIndex;
         public ColorType Color => _color;
+
+        public Player Player => _playerManager.GetPlayer(_color);
 
         public List<IMovable> ValidMoves => _pathFinder.ValidMoves;
 
@@ -35,6 +38,7 @@ namespace Diwide.Checkers
         public void Initialize()
         {
             // _registry.GetTileFacade(Index).PawnFacade = this;
+            Player.Pawns.Add(this);
             _renderer.material = _color == ColorType.Black 
                 ? _settings.BlackPawnMaterial 
                 : _settings.WhitePawnMaterial;
@@ -43,6 +47,7 @@ namespace Diwide.Checkers
         public void Dispose()
         {
             _tileFacade.PawnFacade = null;
+            Player.Pawns.Remove(this);
             Destroy(gameObject);
         }
 

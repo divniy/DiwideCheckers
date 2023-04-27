@@ -45,11 +45,13 @@ namespace Diwide.Checkers
             Container.BindSignal<TileSelectedSignal>()
                 .ToMethod<ValidPathHighlighter>(x => x.OnTileSelectedSignal)
                 .FromResolve();
+
+            Container.BindInterfacesTo<GameInitializer>().AsSingle();
             
             Container.BindExecutionOrder<TilesRegistry>(-40);
             Container.BindExecutionOrder<BoardGenerator>(-30);
-            Container.BindExecutionOrder<PawnsGenerator>(-20);
-            Container.BindExecutionOrder<PlayerManager>(-10);
+            Container.BindExecutionOrder<PlayerManager>(-20);
+            Container.BindExecutionOrder<PawnsGenerator>(-10);
         }
 
         
@@ -61,6 +63,15 @@ namespace Diwide.Checkers
             subcontainer.BindInterfacesAndSelfTo<PawnFacade>()
                 .FromComponentOnRoot().AsSingle().NonLazy();
             subcontainer.BindInterfacesAndSelfTo<PathFinder>().AsSingle().NonLazy();
+        }
+
+        public class GameInitializer : IInitializable
+        {
+            [Inject] private PlayerManager _playerManager;
+            public void Initialize()
+            {
+                _playerManager.StartPlayerTurn();
+            }
         }
 
         [Serializable]
