@@ -1,5 +1,6 @@
 using System;
 using JetBrains.Annotations;
+using Zenject;
 
 namespace Diwide.Checkers
 {
@@ -56,7 +57,8 @@ namespace Diwide.Checkers
         
         public override string ToString()
         {
-            return $"(R: {Row}, C: {Col})";
+            // return $"(R: {Row}, C: {Col})";
+            return $"{Row}, {Col}";
         }
 
         public override int GetHashCode()

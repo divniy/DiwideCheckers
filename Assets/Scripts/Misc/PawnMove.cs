@@ -1,4 +1,5 @@
 using System;
+using Zenject;
 
 namespace Diwide.Checkers
 {
@@ -10,6 +11,10 @@ namespace Diwide.Checkers
 
         public TileIndex Middle { get; protected set; }
 
+        // public PawnMove(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.TileIndex, pawnFacade.TileIndex + relativeTo)
+        // {
+        // }
+        
         public PawnMove(TileIndex from, TileIndex to)
         {
             From = from;
@@ -17,13 +22,13 @@ namespace Diwide.Checkers
             Middle = null;
         }
 
-        public PawnMove(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.TileIndex, pawnFacade.TileIndex + relativeTo)
-        {
-        }
-
         public override string ToString()
         {
-            return $"Move: {From} => {To}";
+            return $"{From} => {To}";
         }
+        
+        // public class Factory : PlaceholderFactory<PawnFacade, TileIndex, PawnMove>
+        // {
+        // }
     }
 }
