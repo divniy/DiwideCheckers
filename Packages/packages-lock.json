@@ -1,11 +1,5 @@
 {
   "dependencies": {
-    "com.avapl.checkers": {
-      "version": "file:/Users/divniy/workspace/unity/AvaPL-Checkers/Checkers/Assets",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.collab-proxy": {
       "version": "2.0.3",
       "depth": 0,
