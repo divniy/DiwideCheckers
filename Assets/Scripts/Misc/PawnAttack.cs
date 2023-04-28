@@ -1,15 +1,25 @@
+using System;
+using UnityEngine;
+
 namespace Diwide.Checkers
 {
-    public class PawnAttack : PawnMove
+    [Serializable]
+    public class PawnAttack : BaseMovable
     {
-        public PawnAttack(TileIndex from, TileIndex to) : base(from, to)
+        [field: SerializeReference] 
+        public override TileIndex Middle { get; }
+
+
+        public PawnAttack(TileIndex from, TileIndex to)
         {
-            var delta = To - From;
-            Middle = From + new TileIndex(delta.Row / 2, delta.Col / 2);
+            From = from;
+            To = to;
+            Middle = From + (To - From) / 2;
         }
 
         // public PawnAttack(PawnFacade pawnFacade, TileIndex relativeTo) : this(pawnFacade.TileIndex, pawnFacade.TileIndex + relativeTo)
         // {
         // }
+        
     }
 }

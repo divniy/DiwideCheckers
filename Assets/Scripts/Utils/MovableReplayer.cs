@@ -9,7 +9,7 @@ namespace Diwide.Checkers.Utils
     {
         private SignalBus _signalBus;
         private MovableRegistry _movableRegistry;
-        private Queue<PawnMove> _pawnMoves;
+        private Queue<IMovable> _pawnMoves;
 
         public MovableReplayer(SignalBus signalBus, MovableRegistry movableRegistry)
         {

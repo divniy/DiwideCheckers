@@ -1,21 +1,26 @@
+using System;
 using Zenject;
 
 namespace Diwide.Checkers
 {
-    public class RelativePawnMoveFactory : IFactory<PawnFacade, TileIndex, PawnMove>
+    public class RelativePawnMoveFactory : IFactory<PawnFacade, TileIndex, IMovable>
     {
-        public PawnMove Create(PawnFacade pawnFacade, TileIndex relativeTo)
+        public IMovable Create(PawnFacade pawnFacade, TileIndex relativeTo)
         {
             var from = pawnFacade.TileIndex;
             var to = from + relativeTo;
-            if (relativeTo.Row == 1 || relativeTo.Row == -1)
-            {
-                return new PawnMove(from, to);
-            }
-            else
-            {
-                return new PawnAttack(from, to);
-            }
+            return Math.Abs(relativeTo.Row) == 1
+                ? new PawnMove(from, to)
+                : new PawnAttack(from, to);
         }
     }
+
+    /*public class MoveFromStringFactory : IFactory<string, PawnMove>
+    {
+        public PawnMove Create(string strMove)
+        {
+            // string[] data = strMove.(" -> ");
+            // throw new NotImplementedException();
+        }
+    }*/
 }

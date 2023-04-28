@@ -10,18 +10,19 @@ namespace Diwide.Checkers
         [SerializeField] private MeshRenderer _renderer;
 
         [Inject] private GameInstaller.Settings _settings;
-        private TileFacade _tileFacade;
+        // private TileFacade _tileFacade;
         [Inject] private ColorType _color;
         [Inject] private TilesRegistry _registry;
         [Inject] private PathFinder _pathFinder;
         [Inject] private PlayerManager _playerManager;
 
-        public TileIndex TileIndex => _tileFacade.TileIndex;
+        public TileFacade TileFacade => GetComponentInParent<TileFacade>();
+        public TileIndex TileIndex => TileFacade.TileIndex;
         public ColorType Color => _color;
 
         public Player Player => _playerManager.GetPlayer(_color);
 
-        public List<PawnMove> ValidMoves => _pathFinder.ValidMoves;
+        public List<IMovable> ValidMoves => _pathFinder.ValidMoves;
 
         public void GenerateValidMoves()
         {
@@ -46,17 +47,18 @@ namespace Diwide.Checkers
         
         public void Dispose()
         {
-            _tileFacade.PawnFacade = null;
+            // _tileFacade.PawnFacade = null;
             Player.Pawns.Remove(this);
             Destroy(gameObject);
         }
 
         public void AssignWithTile(TileFacade tileFacade, bool worldPositionStays = true)
         {
-            if (_tileFacade != null) _tileFacade.PawnFacade = null;
-            _tileFacade = tileFacade;
-            _tileFacade.PawnFacade = this;
-            transform.SetParent(_tileFacade.transform, worldPositionStays);
+            // TileFacade oldTileFacade = _tileFacade;
+            // tileFacade.PawnFacade = this;
+            // _tileFacade = tileFacade;
+            transform.SetParent(tileFacade.transform, worldPositionStays);
+            // if (oldTileFacade != null) oldTileFacade.PawnFacade = null;
         }
 
         public class Factory : PlaceholderFactory<ColorType, PawnFacade>

@@ -18,7 +18,8 @@ namespace Diwide.Checkers
             ? ColorType.White 
             : ColorType.Black;
 
-        public PawnFacade PawnFacade { get; set; } = null;
+        // public PawnFacade PawnFacade { get; set; } = null;
+        public PawnFacade PawnFacade => GetComponentInChildren<PawnFacade>();
         // private PawnFacade.Factory _pawnFactory;
 
         // [Inject]

@@ -30,6 +30,12 @@ namespace Diwide.Checkers
                 firstTileIndex.Col - secondTileIndex.Col);
         }
 
+        public static TileIndex operator /(TileIndex tileIndex, int del)
+        {
+            Func<int, int> calculate = (value) => Mathf.FloorToInt((float) value / del);
+            return new TileIndex(calculate(tileIndex.Row), calculate(tileIndex.Col));
+        }
+
         public static bool operator !=(TileIndex firstTileIndex, TileIndex secondTileIndex)
         {
             return !(firstTileIndex == secondTileIndex);

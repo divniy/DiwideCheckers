@@ -7,7 +7,7 @@ namespace Diwide.Checkers
 {
     public class PathFinder
     {
-        public List<PawnMove> ValidMoves = new();
+        public List<IMovable> ValidMoves = new();
 
         [Inject] private PawnFacade Pawn;
         [Inject] private MoveValidator _moveValidator;
@@ -17,7 +17,7 @@ namespace Diwide.Checkers
         public void GenerateValidMoves()
         {
             ValidMoves = new();
-            var moves = new List<PawnMove>();
+            var moves = new List<IMovable>();
             int moveRow = _playerManager.CurrentPlayer.PawnsColor == ColorType.Black ? 1 : -1;
 
             moves.Add(_moveFactory.Create(Pawn, new TileIndex(moveRow, -1)));

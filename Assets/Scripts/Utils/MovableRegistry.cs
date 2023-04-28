@@ -9,17 +9,17 @@ namespace Diwide.Checkers.Utils
     [Serializable]
     public class MovableRegistry : ISerializationCallbackReceiver
     {
-        public List<PawnMove> Movables = new();
+        public List<IMovable> Movables = new();
         [SerializeField] private List<string> _movableStrings = new();
 
-        public void Add(PawnMove move)
+        public void Add(IMovable move)
         {
             Movables.Add(move);
         }
 
-        public Queue<PawnMove> GetQueue()
+        public Queue<IMovable> GetQueue()
         {
-            return new Queue<PawnMove>(Movables);
+            return new Queue<IMovable>(Movables);
         }
 
         public void Clear() => Movables.Clear();
@@ -44,7 +44,7 @@ namespace Diwide.Checkers.Utils
                 TileIndex from = new TileIndex(Int32.Parse(fromStrings[0]), Int32.Parse(fromStrings[1]));
                 TileIndex to = new TileIndex(Int32.Parse(toStrings[0]), Int32.Parse(toStrings[1]));
                 var deltaRow = (from - to).Row;
-                PawnMove movable;
+                IMovable movable;
                 if (deltaRow == 1 || deltaRow == -1)
                 {
                     movable = new PawnMove(from, to);

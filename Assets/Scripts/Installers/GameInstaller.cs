@@ -22,7 +22,7 @@ namespace Diwide.Checkers
 
             // Container.BindFactory<int, int, TileIndex, TileIndex.Factory>().AsSingle().NonLazy();
             // Container.BindFactory<PawnFacade, TileIndex, PawnMove, PawnMove.Factory>().AsSingle().NonLazy();
-            Container.BindFactory<PawnFacade, TileIndex, PawnMove, IMovable.RelativeFactory>()
+            Container.BindFactory<PawnFacade, TileIndex, IMovable, IMovable.RelativeFactory>()
                 .FromFactory<RelativePawnMoveFactory>();
             Container.BindInterfacesAndSelfTo<TilesRegistry>().AsSingle().NonLazy();
             Container.Bind<MoveValidator>().AsSingle().NonLazy();
@@ -115,7 +115,7 @@ namespace Diwide.Checkers
 
     public class MovePawnSignal
     {
-        public PawnMove Movable;
+        public IMovable Movable;
     }
     
     public class WaitingForMovementSignal{}
